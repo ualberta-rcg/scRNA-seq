@@ -69,7 +69,7 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
     library(celda)
     library(scuttle)
 
-##### Convert the seurat object into a single cell experiment (SCE) object
+##### Convert the matrix into a single cell experiment (SCE) object
 
     sce <- SingleCellExperiment(assays = list(counts = filtered_counts))
 
@@ -78,7 +78,7 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
     sce <- decontX(sce)
     sce <- logNormCounts(sce)
 
-##### Convert SCE object back to Seurat object
+##### Convert SCE object to Seurat object
 
     seur_obj <- as.Seurat(sce, counts = "counts", data = "logcounts")
     seur_obj[["RNA"]] <- seur_obj[[DefaultAssay(seur_obj)]]
@@ -99,9 +99,8 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
     rowData(sce)$Symbol <- rownames(sce)
     is.mt <- grepl("^MT-", rowData(sce)$Symbol)
 
-##### run QC metrics
+##### run QC metrics per cell
 
-    cellQC <- perCellQCMetrics(sce, subsets = list(Mito = is.mt))
     sce <- addPerCellQC(sce, subsets = list(Mito = is.mt))
 
 ##### Define Filtering Criteria. Find the threshold through two histograms.
@@ -148,14 +147,14 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
     summary(seur_filtered$nFeature_originalexp)
     seur_filtered <- FindVariableFeatures(seur_filtered, selection.method = "vst", nfeatures = 500)
 
-> nfeatures = 2000 in default. Determine it based on the sample size and the detected gene numbers per sample.
+> nfeatures = 2000 in default. Change it based on your sample size and the detected gene numbers per sample.
 
 # Step 7 Dimentionality Reduction
 
 ##### Scale the data
 
-    seur_filtered[["percent.mt"]] <- PercentageFeatureSet(seur_filtered, pattern = "^MT-")
-    seur_filtered <- ScaleData(seur_filtered, vars.to.regress = c("percent.mt"))
+    seur_filtered[["percent.mt"]] <- PercentageFeatureSet(seur_filtered, pattern = "^MT-")    # Calculates the percentage of mitochondrial gene expression for each cell
+    seur_filtered <- ScaleData(seur_filtered, vars.to.regress = c("percent.mt"))        # center and scale all genes but regressing out the expression of MT genes
 
 ##### Run PCA
 
@@ -178,10 +177,14 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
 
 ##### Estimate expected number of detectable doublets
 
-    type.freq <- table(seur_filtered@meta.data$seurat_clusters) / ncol(seur_filtered)
-    homotypic.prop <- sum(type.freq^2)
-    nEXP <- 0.009 * (ncol(seur_filtered) / 1000) * (1 - homotypic.prop) * ncol(seur_filtered)
+    type.freq <- table(seur_filtered@meta.data$seurat_clusters) / ncol(seur_filtered)        # No. of cells in each cluster
+    homotypic.prop <- sum(type.freq^2)            # homotypic proportion — the probability that two randomly selected cells belong to the same cluster
+    nEXP <- 0.009 * (ncol(seur_filtered) / 1000) * (1 - homotypic.prop) * ncol(seur_filtered) 
     nEXP
+
+> 0.009: expected number of doublets per 1000 cells (recommended by 10x Genomics)
+> ncol(seur_filtered): total number of cells
+> (1 - homotypic.prop): adjusts for undetectable homotypic doublets
 
 ##### Load Custom DoubletFinder patch for Seurat v5
 
@@ -216,7 +219,7 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
 
 ##### Visualize doublets on UMAP
 
-    df_col <- grep("DF.classifications", colnames(seur_filtered@meta.data), value = TRUE)
+    df_col <- grep("DF.classifications", colnames(seur_filtered@meta.data), value = TRUE)    # Find the column name that contains predicted doublet status
     table(seur_filtered@meta.data$seurat_clusters, seur_filtered@meta.data[[df_col]])
     seur_filtered <- RunUMAP(seur_filtered, dims = 1:PCs)
     DimPlot(seur_filtered, reduction = "umap", group.by = df_col)
