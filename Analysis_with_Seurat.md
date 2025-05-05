@@ -28,9 +28,10 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
 
 > change data.dir to where your cellranger outputs locate
 
-##### Row is gene, column is droplet, the number is how many UMI
+##### Row is the gene ID, column is the barcode of each droplet, the numbers are UMI counts
 
     dim(raw_dat)
+    raw_dat[1:5, 1:5]
 
 ##### Easy filtration: remove those droplet with 0 or 1 UMI
 
