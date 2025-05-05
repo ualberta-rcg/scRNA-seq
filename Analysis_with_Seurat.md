@@ -55,8 +55,8 @@ This pipeline is based on the R package Seurat and R version 4.3. All required s
     
 > niters=10000: change it based on your needs, usually 100000
 
-    e.out <- e.out[!is.na(e.out$PValue),] 
-    is.cell <- e.out$FDR <= 0.01
+    e.out <- e.out[!is.na(e.out$PValue),]   # filter out those not-caculated droplets
+    is.cell <- e.out$FDR <= 0.01            # Among all barcodes we call "cells", at most ~1% are expected to be false positives.
     e.cells <- rownames(e.out)[is.cell]
     head(e.cells)
     filtered_counts <- raw_dat[, e.cells]
