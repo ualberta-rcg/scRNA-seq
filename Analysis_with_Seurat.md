@@ -1,8 +1,32 @@
 # Summary
 
-This pipeline is based on the R package Seurat and R version 4.3. All required software has been installed into the Apptainer container.
+This pipeline is based on the R package Seurat and R version 4.3. You need to start an Rstudio session to run the code.
+
+# Launch Rstudio
+
+To launch Rstudio, you need to download the scRNA-seq.sif from the following google drive.
 
 ##### The container image file can be found at: https://drive.google.com/drive/folders/18vXOcOPEPUGW85fM6ZbCxKQJQuHnanQD?usp=sharing
+
+##### If you are using workshop cluster @spring2025-uofa.c3.ca
+
+This is the job script we are going to use in the test cluster @spring2025-uofa.c3.ca
+
+    sbatch test_cluster.sh
+
+##### If you are using the Alliance cluster
+
+This is the job script you can use in the Alliance cluster. Please change the account and server domain before submitting the job.
+
+    sbatch alliance_cluseter.sh
+
+##### If you are using your own Linux system
+
+This is the bash script that you run in your local computer
+
+    cd /path/to/scRNA-seq.sif
+    bash local_linux.sh
+    
 
 # R packages needed 
 
