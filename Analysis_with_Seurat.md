@@ -10,8 +10,7 @@ To launch Rstudio, you need to download the scRNA-seq.sif from the following goo
 
 ##### If you are using workshop cluster @spring2025-uofa.c3.ca
 
-This is the job script we are going to use in the test cluster @spring2025-uofa.c3.ca
-
+    cp /project/def-sponsor00/scRNA-seq/test_cluster.sh .
     sbatch test_cluster.sh
 
 ##### If you are using the Alliance cluster
