@@ -37,5 +37,5 @@ echo -e "http://localhost:$SSHPORT\n"
 
 
 # Start rstudio
-apptainer exec --workdir $WORKDIR --home $WORKDIR/home --bind $WORKDIR/lib:/var/lib/rstudio-server --bind $WORKDIR/run:/var/run/rstudio-server /$HOME/scRNA-seq.sif rserver --www-port=$RPORT --server-daemonize=0 --server-user=$(whoami)
+apptainer exec --workdir $WORKDIR --home $WORKDIR/home --bind $WORKDIR/lib:/var/lib/rstudio-server --bind $WORKDIR/run:/var/run/rstudio-server scRNA-seq.sif rserver --www-port=$RPORT --server-daemonize=0 --server-user=$(whoami)
 
