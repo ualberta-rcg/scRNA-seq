@@ -3,6 +3,4 @@ This workshop offers a balanced blend of theoretical foundation and hands-on exp
 
 ##### The course materials can be found at: https://drive.google.com/drive/folders/18vXOcOPEPUGW85fM6ZbCxKQJQuHnanQD?usp=sharing
 
-Please find the HPC cluster info for this workshop at:  https://tinyurl.com/kzyxwbbz
-Please add your name, initials, or something else you can recognize and remember beside one of the unclaimed usernames.
 
