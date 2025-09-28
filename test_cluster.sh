@@ -31,7 +31,7 @@ echo "Setting up SSH tunnel for RStudio..."
 
 # Show access instructions
 echo -e "\nTo connect to RStudio from your local machine, run:"
-echo -e "ssh -L $SSHPORT:${NODE_HOSTNAME}:$RPORT $USER@spring2025-uofa.c3.ca\n"
+echo -e "ssh -N -L ${SSHPORT}:localhost:${RPORT} -J ${USER}@fall2025-uofa.c3.ca ${USER}@${NODE_HOSTNAME}\n"
 echo "Then, open your web browser and go to:"
 echo -e "http://localhost:$SSHPORT\n"
 
