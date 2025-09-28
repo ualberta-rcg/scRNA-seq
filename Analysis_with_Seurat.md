@@ -4,7 +4,7 @@ This pipeline is based on the R package Seurat and R version 4.3. You need to st
 
 # Launch Rstudio
 
-To launch Rstudio, you need to use the scRNA-seq.sif in the cluster.
+To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-41)
 
     cp /project/def-sponsor00/scRNA-seq/test_cluster.sh .
     sbatch test_cluster.sh
@@ -27,7 +27,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster.
     library(tidyr)
     library(dplyr)
 
-# Step 1: Load raw matrix and understand the input
+# Step 1: Load raw matrix and understand the input (Slide 42)
 
     require("DropletUtils")
     require("Seurat")
@@ -46,7 +46,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster.
     raw_dat <- raw_dat[,colSums(raw_dat)>1]
     dim(raw_dat)
 
-# Step 2: Identify the empty droplets
+# Step 2: Identify the empty droplets (Slide 43-47)
 
     br.out <- barcodeRanks(raw_dat)
 
@@ -69,7 +69,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster.
     head(e.cells)
     filtered_counts <- raw_dat[, e.cells]
 
-# Step 3: Remove ambient RNA
+# Step 3: Remove ambient RNA (Slide 48-49)
 
 ##### Load the R packages:
 
