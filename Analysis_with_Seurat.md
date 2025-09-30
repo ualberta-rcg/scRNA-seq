@@ -69,7 +69,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     head(e.cells)
     filtered_counts <- raw_dat[, e.cells]
 
-# Step 3: Remove ambient RNA (Slide 48-49)
+# Step 3: Remove ambient RNA (Slide 48-50)
 
 ##### Load the R packages:
 
@@ -92,7 +92,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     seur_obj[["RNA"]] <- seur_obj[[DefaultAssay(seur_obj)]]
     DefaultAssay(seur_obj) <- "RNA"
 
-# Step 4: Identify dead/broken cells
+# Step 4: Identify dead/broken cells (Slide 51-53)
 
     library(SingleCellExperiment)
     library(DropletUtils)
@@ -146,25 +146,25 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
 
     seur_filtered <- as.Seurat(sce_filtered, counts = "counts", data = "logcounts")
 
-# Step 5 Expression Normalization
+# Step 5 Expression Normalization (Slide 54-55)
 
     seur_filtered <- NormalizeData(seur_filtered, normalization.method = "LogNormalize", scale.factor = 10000)
 
-# Step 6: Feature Selection - Identify highly variable genes
+# Step 6: Feature Selection - Identify highly variable genes (Slide 56-59)
 
     summary(seur_filtered$nFeature_originalexp)
     seur_filtered <- FindVariableFeatures(seur_filtered, selection.method = "vst", nfeatures = 500)
 
 > nfeatures = 2000 in default. Change it based on your sample size and the detected gene numbers per sample.
 
-# Step 7 Dimentionality Reduction
+# Step 7 Dimentionality Reduction (Slide 60-61)
 
 ##### Scale the data
 
     seur_filtered[["percent.mt"]] <- PercentageFeatureSet(seur_filtered, pattern = "^MT-")    # Calculates the percentage of mitochondrial gene expression for each cell
     seur_filtered <- ScaleData(seur_filtered, vars.to.regress = c("percent.mt"))        # center and scale all genes but regressing out the expression of MT genes
 
-##### Run PCA
+##### Run PCA 
 
     seur_filtered <- RunPCA(seur_filtered, features = VariableFeatures(seur_filtered))
     ElbowPlot(seur_filtered)
@@ -172,14 +172,14 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
 
 > Determine PCs based on ElbowPlot diagram.
 
-# Step 8. Cell clustering
+# Step 8. Cell clustering (Slide 62-63)
 
     seur_filtered <- FindNeighbors(seur_filtered, dims = 1:PCs)
     seur_filtered <- FindClusters(seur_filtered, resolution = 0.3)
 
 > resolution=0.3 can be set between 0 and 1. Need fine tuning to find the best number for each project.
 
-# Step 9. Filter out doublets
+# Step 9. Filter out doublets (Slide 64-71)
 
     library(DoubletFinder)
 
@@ -225,7 +225,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
 
 > Change pN and pK based on sweep results.
 
-##### Visualize doublets on UMAP
+##### Visualize doublets on UMAP 
 
     df_col <- grep("DF.classifications", colnames(seur_filtered@meta.data), value = TRUE)    # Find the column name that contains predicted doublet status
     table(seur_filtered@meta.data$seurat_clusters, seur_filtered@meta.data[[df_col]])
@@ -239,13 +239,13 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     seur_filtered <- FindNeighbors(seur_filtered, dims = 1:PCs)
     seur_filtered <- FindClusters(seur_filtered, resolution = 0.3)
 
-# Step 10. Run UMAP for visualization
+# Step 10. Run UMAP for visualization (Slide 72-73)
 
     seur_filtered <- RunUMAP(seur_filtered, dims = 1:PCs)
     umap_cluster <- DimPlot(seur_filtered, reduction = "umap", group.by = "seurat_clusters", label = TRUE, label.size = 5)
     ggsave("umap_cluster_plot.png", plot = umap_cluster, width = 8, height = 6, dpi = 300)
 
-# Step 11. Identify cluster-specific markers
+# Step 11. Identify cluster-specific markers (Slide 74-75)
 
     markers <- FindAllMarkers(seur_filtered, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
     head(markers)
@@ -254,7 +254,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     dotplot <- DotPlot(seur_filtered, features = unique(top3$gene)) + RotatedAxis()
     ggsave("dotplot_top3_markers.png", plot = dotplot, width = 8, height = 6, dpi = 300)
 
-# Step 12. Cell Type Annotation
+# Step 12. Cell Type Annotation (Slide 76)
 
     library(SingleR)
     library(celldex)
