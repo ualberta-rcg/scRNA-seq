@@ -32,10 +32,9 @@ echo "Setting up SSH tunnel for RStudio..."
 # Show access instructions
 echo -e "\nTo connect to RStudio from your local machine, run:"
 echo -e "ssh -N -L ${SSHPORT}:localhost:${RPORT} -J ${USER}@fall2025-uofa.c3.ca ${USER}@${NODE_HOSTNAME}\n"
-echo "Then, open your web browser and go to:"
+echo "You will be asked to enter the password twice. Then, open your web browser and go to:"
 echo -e "http://localhost:$SSHPORT\n"
-
+echo -e "To kill the job: scancel $SLURM_JOB_ID\n"
 
 # Start rstudio
-apptainer exec --workdir $WORKDIR --home $WORKDIR/home --bind $WORKDIR/lib:/var/lib/rstudio-server --bind $WORKDIR/run:/var/run/rstudio-server /$HOME/scRNA-seq.sif rserver --www-port=$RPORT --server-daemonize=0 --server-user=$(whoami)
-
+apptainer exec --workdir $WORKDIR --home $WORKDIR/home --bind $WORKDIR/lib:/var/lib/rstudio-server --bind $WORKDIR/run:/var/run/rstudio-server /project/def-sponsor00/scRNA-seq/rstudio4.3/scRNA-seq.sif rserver --www-port=$RPORT --server-daemonize=0 --server-user=$(whoami)
