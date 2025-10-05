@@ -54,7 +54,6 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
 
     plot(br.out$rank, br.out$total, log="xy", xlab="Rank", ylab="Total")
     abline(h=metadata(br.out)$knee, col="dodgerblue", lty=2)
-    legend("bottomleft", lty=2, col=c("dodgerblue", "forestgreen"), legend=c("knee", "inflection"))
 
 ##### Identify empty drops with Poisson method, and fill them out from the matrix:
 
@@ -85,7 +84,7 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     sce <- decontX(sce)
     sce <- logNormCounts(sce)
 
-##### Convert SCE object to Seurat object
+##### Convert SCE object to Seurat object (with "RNA" assay)
 
     seur_obj <- as.Seurat(sce, counts = "counts", data = "logcounts")
     seur_obj[["RNA"]] <- seur_obj[[DefaultAssay(seur_obj)]]
