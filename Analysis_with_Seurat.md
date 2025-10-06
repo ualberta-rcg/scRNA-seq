@@ -256,12 +256,27 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
 
     library(SingleR)
     library(celldex)
+
+##### Assign cluster ID to each cell
+
     Idents(seur_filtered) <- "seurat_clusters"
+
+##### Download the reference
+    
     ref <- celldex::HumanPrimaryCellAtlasData()
+
+##### Retrieve the normalized expression profile and run SingleR
+    
     expr <- GetAssayData(seur_filtered, slot = "data")
     cluster_labels <- SingleR(test = expr, ref = ref, labels = ref$label.main, clusters = Idents(seur_filtered))
+
+##### Get the cluster ID, cell type label, and pass it back to Seurat object
+    
     celltype_labels <- setNames(cluster_labels$labels, rownames(cluster_labels))
     seur_filtered <- RenameIdents(seur_filtered, celltype_labels)
     seur_filtered$predicted_celltype <- as.character(Idents(seur_filtered))
+
+##### Plot the results
+    
     umap_annoated <- DimPlot(seur_filtered, group.by = "predicted_celltype", reduction = "umap", label = TRUE, repel = TRUE)
     ggsave("umap_annoated.png", plot = umap_annoated, width = 8, height = 6, dpi = 300)
