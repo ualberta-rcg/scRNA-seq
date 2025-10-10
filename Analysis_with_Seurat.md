@@ -9,7 +9,9 @@ To launch Rstudio, you need to use the scRNA-seq.sif in the cluster. (Slide 37-4
     cp /project/def-sponsor00/scRNA-seq/test_cluster.sh .
     sbatch test_cluster.sh
 
-##### If you are using the Alliance cluster or your own Linux system, you can download scRNA-seq.sif from the shared Google Drive: https://drive.google.com/drive/folders/18vXOcOPEPUGW85fM6ZbCxKQJQuHnanQD?usp=sharing
+##### open job_xxx.log and find the line with "ssh -N -L ...". Open another terminal or windows powershell, copy the "ssh" line and run. Please note you need to enter the password twice. 
+
+##### Then find the link with localhost, open this link in your browser to launch rstudio.
     
 
 # R packages needed 
